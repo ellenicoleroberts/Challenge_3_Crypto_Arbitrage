@@ -1,13 +1,11 @@
 # Crypto Arbitrage
 
 
-<img src= "images/banner.png" width="930" height="200">
+<img src= "images/raining.png" width="930" height="300">
 
-# Loan Qualifier
+This code analyzes arbitrage opportunities for cryptocurrencies by taking advantage of simultaneous price dislocations in different crypto markets.
 
-This application connects a customer in search of a loan with a number of suitable banks. Using command-line-interface (CLI), the customer informs the app of their credit score, monthly debt-to-income ratio, loan-to-value ratio, and the size of their requested loan. The app then uses these metrics to filter through a list of banks, selecting only those which the customer qualifies for. The customer is able to save their list of applicable banks to a spreadsheet.
-
-This application is an efficient and easy solution for the customer to quickly find a custom-tailored list of banks who can offer them a loan.
+The code sorts through historical trade data for Bitcoin on two exchanges: Bitstamp and Coinbase. After collecting and preparing the data, the data is then analyzed to determine if any arbitrage opportunities exist for Bitcoin.
 
 ---
 
@@ -16,42 +14,42 @@ This application is an efficient and easy solution for the customer to quickly f
 This application leverages python 3.7 with the following packages:
 
 * pandas: an open-source library that offers easy-to-use data analysis tools for Python.
-* pathlib: for user prompts and dialogues permitting an interactive experience.
-* matplotlib: for creation of file paths allowing the application to interact with a computer's filesystem.
+* pathlib: for creation of file paths allowing the application to interact with a computer's filesystem.
+* %matplotlib: for creating static, animated, and interactive visualizations in Python.
 
-To run this application, first clone the GitHub repo this file is in into your Terminal. Next, to install these packages, while in this same repo in your Terminal, enter `pip install -r requirements.txt`.
+To run this code, first clone the GitHub repo this file is in into your Terminal. Next, to install these packages, while in this same repo in your Terminal, enter `pip install -r requirements.txt`.
 
 ---
 
 ## Installation Guide
 
-In addition to the normal dependencies above, to install the Loan Qualifier you need to first activate the correct environment with the following comand:
+In addition to the normal dependencies above, to run the Crypto Arbitrage code you need to first activate the correct environment by inputting the following command in your terminal:
 
 `conda activate dev`
 
-Next, while in this repo within your Terminal, run the app:
-
-`$ python app.py`
+Next, while in your IDE, open the "crypto_arbitrage.ipynb" notebook file and run the code.
 
 ---
 
 ## Usage
 
-To begin with, the app asks the user to enter a file path to access a list of banks. The user needs to enter the exact filepath, data/daily_rate_sheet.csv, as shown here:
+To begin with, the code imports data into the correct format. Two sources of data are imported into seperate DataFrames: Bitcoin (BTC) prices from Bitstamp, and BTC prices from Coinbase. Both DataFrames include data dating from 01/01/2018 to 03/31/2018.
 
-![Prompts customer to enter .csv file path.](images/input_file_path.png)
+Next, the data is "cleaned" by dropping all null values, formatting the BTC closing prices into strings, and dropping duplicated values.
 
-Next, the user will be prompted to input a number of metrics that quantify their eligibility to apply for a loan at select banks. For example:
+The code then creates two new DataFrames (one for each exchange, Bitstamp and Coinbase) that includes only the closing BTC prices. Each of these DataFrame's prices are then plotted over the course of the timeframe and overlayed on top of each other to show visual differences. For example:
 
-![Prompts user to enter various metrics.](images/user_metrics.png)
+![Arbitrage spread plot.](images/arbspread.png)
 
-A list of applicable banks will then be generated depending on the user's eligibility. The user will then be asked if they wish to save their list of banks they qualify for:
+Provided there are notable variations between the two exchanges' BTC prices, the code further examines select time periods that show pronounced price variations. The arbitrage spread is then calculated by subtracting the Coinbase lower closing prices from the Bitstamp higher closing prices. Next, statistical summaries and box plots are generated to highlight the extent of the spreads in each selected time period.
 
-![Asks user if they would like to save their list of applicable banks.](images/to_save_list.png)
+Spreads that are negative, or less than zero, are eliminated. Spread returns are then calculated and those that are less than 1% profit are eliminated.
 
-If the user answers "y", they will be asked to input an output file path (.csv) to save their list of applicable loans to. The application will save the data accordingly and then terminate:
+After generating summary statistics, the mean spread returns suggest which time period generated the most arbitrage profit between Bitstamp and Coinbase.
 
-![Asks user if they would like to save their list of applicable banks.](images/saved_list.png)
+Next, potential profits (in dollars) per arbitrage trade are calcualted for each of the select time periods. These time periods' profits are then plotted.
+
+Finally, cumulative arbitrage profits for each period are summed and plotted.
 
 ---
 
